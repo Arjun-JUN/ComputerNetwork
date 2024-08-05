@@ -2,7 +2,7 @@ HTTP Server README
 
 Instructions
 
-    Compilation: gcc serverQ2_cs21b008_cs21b083 -o server -pthread
+    Compilation: gcc httpServer.c -o server -pthread
 
     Execution:  ./server <port_number> <directory_path>
 
