@@ -1,0 +1,105 @@
+# serverQ3_cs21b008_cs21b083
+
+This is the server-side code for the CS3205 Assignment 2, Question 3.
+
+## Description
+
+This server is designed to handle a chatroom. It is written in C and uses the standard socket programming libraries.
+
+## Getting Started
+
+### Executing program
+
+* How to run the program:
+    gcc serverQ3_cs21b008_cs21b083 -o server -pthread
+    ./server <PORT> <MAX CONNECTIONS> <TIMEOUT time> 
+
+
+# Server for Chatroom Application
+
+This server application is part of a chatroom application. It handles multiple clients and broadcasts messages to all clients.
+
+
+## Global Variables
+
+### PORT
+The port number on which the server is listening.
+
+### MAX_CLIENTS
+The maximum number of clients that the server can handle at once.
+
+### TIMEOUT
+The amount of time a client can be inactive before being disconnected.
+
+### client_mutex
+A mutex used to ensure thread safety when accessing the array of clients.
+
+### timeout_mutex
+A mutex used to ensure thread safety when accessing the timeout functionality.
+
+
+
+## Functions
+
+### max_clients_reached(struct client_info** clients)
+This function checks if the maximum number of clients has been reached. It iterates over the array of clients and counts the number of non-null entries. If the count reaches the maximum number of clients, it returns true, otherwise false.
+
+### add_client(struct client_info** clients, struct client_info* client)
+This function adds a new client to the array of clients. It iterates over the array until it finds a null entry, and then assigns the new client to that position.
+
+### remove_client(struct client_info** clients, int client_id)
+This function removes a client from the array of clients. It iterates over the array until it finds the client with the matching client_id, then frees the memory for that client and sets the array entry to null.
+
+### broadcast_message(struct client_info** clients, struct client_info* client, char *message)
+This function sends a message to all clients except the sender. It iterates over the array of clients and sends the message to each non-null client that does not match the sender's client_id.
+
+
+### list_users function:
+This function is used to list all the users that are currently online. It locks the client_mutex to prevent other threads from modifying the clients array while it's being read. It iterates over the clients array, and for each non-null client, it writes the client's name to the file descriptor. After listing all the online users, it unlocks the client_mutex.
+ 
+ * @param clients: A pointer to the array of client_info pointers representing the clients.
+ * @param fd: The file descriptor to which the list of online users will be written.
+
+
+### Client Handler Function
+
+The `client_handler` function is responsible for handling each client that connects to the server. It takes a `void*` argument which is a pointer to a `thread_args` structure. This structure contains pointers to the `client_info` structure for all clients and the current client.
+
+Here is a brief description of the steps performed by the `client_handler` function:
+
+1. Extracts the client information from the `thread_args` structure.
+
+2. Gets the file descriptor for the client.
+
+3. Prompts the client to enter a username and reads the username from the client. The time of the last interaction with the client is also updated.
+
+4. If the read operation fails, an error message is printed, the client is removed from the list of clients, and the file descriptor is closed.
+
+5. If the client exits abruptly (read returns 0), the client is removed from the list of clients.
+
+6. Then, in a while loop, it reads from the fd of the client, and uses `broadcast_message` to send to all clients other than current client.
+
+7. It also checks for any client commands <\\list> or <\\bye> which respectively, lists all users ; and ; exits the chatroom, also notifying other clients.
+
+Please note that the `client_handler` function is executed in a separate thread for each client. This allows the server to handle multiple clients concurrently.
+
+
+### Timeout Checker Function
+
+The `timeout_checker` function is a part of a multi-threaded server-client chatroom application. This function is responsible for checking if any client has been inactive for a certain period of time (defined by the `TIMEOUT` constant). If a client is found to be inactive for more than the `TIMEOUT` period, the function will automatically remove the client from the chatroom.
+
+## Function Details
+
+- The function takes a pointer to an array of `client_info` structures as an argument. Each `client_info` structure contains information about a client connected to the chatroom.
+
+- The function runs an infinite loop where it iterates over all the clients in the chatroom.
+
+- For each client, it checks if the timeout flag (`flag_timeout_enabled`) is enabled and if the difference between the current time and the last active time of the client (`last_time`) is greater than or equal to `TIMEOUT`.
+
+- If both conditions are met, the function constructs a message stating that the client has left the chatroom and broadcasts this message to all other clients.
+
+- The function then removes the client from the chatroom, sends a timeout message to the client, and closes the connection with the client.
+
+Please note that this function is designed to run on a separate thread and continuously monitor the activity of all clients in the chatroom.
+
+

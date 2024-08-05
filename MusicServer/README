@@ -1,0 +1,22 @@
+# Server for Music Streaming Service
+
+This server is part of a music streaming service. It is written in C and uses TCP sockets for communication with clients. It also uses threads to handle multiple clients simultaneously.
+
+## Code Overview
+
+The server program starts by including necessary header files for socket programming, threading, and standard I/O operations.
+
+The server maintains a linked list of clients, where each node contains the client's file descriptor and IP address. The linked list is used to keep track of all connected clients.
+
+The `find` function is used to find a client in the linked list based on the client's file descriptor. It prints the IP address of the client and the song number requested by the client.
+
+The `handle_connection` function is the thread function that handles each client connection. It receives the song number from the client, finds the client's IP address, opens the requested song file, and sends the song file to the client. It also updates the client count using a mutex lock to ensure thread safety.
+
+The `main` function starts by checking the command-line arguments. It then creates a TCP socket and sets up the server address structure. The server then enters a loop where it accepts client connections, creates a new thread for each client, and adds the client to the linked list.
+
+## How to Run
+
+Compile the server program using gcc or any C compiler. Run the compiled program with three command-line arguments: the port number to listen on, the directory containing the song files, and the maximum number of clients that can be connected at the same time.
+
+    gcc server_Q2_cs21b008_cs21b083.c -o server -pthread
+    ./server <PORT> <DIRECTORY> <MAX_CLIENTS>
