@@ -18,5 +18,5 @@ The `main` function starts by checking the command-line arguments. It then creat
 
 Compile the server program using gcc or any C compiler. Run the compiled program with three command-line arguments: the port number to listen on, the directory containing the song files, and the maximum number of clients that can be connected at the same time.
 
-    gcc server_Q2_cs21b008_cs21b083.c -o server -pthread
+    gcc musicServer.c -o server -pthread
     ./server <PORT> <DIRECTORY> <MAX_CLIENTS>
