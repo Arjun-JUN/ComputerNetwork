@@ -1,10 +1,1 @@
-TEAM MEMBER 1:
-    NAME : ARJUN VIKAS RAMESH
-    ROLLNUMBER : CS21B008
-TEAM MEMBER 2:
-    NAME : THIRUVARUL P.
-    ROLLNUMBER : CS21B083
 
-REFERENCES:
-    Q2: refered for writing the FORMAT of receiving and sending FILES between server and client.
-    https://github.com/JeffreytheCoder/Simple-HTTP-Server/blob/master/server.c
